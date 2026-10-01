@@ -2,6 +2,10 @@ package com.store.inventory;
 
 import com.store.inventory.api.InventoryService;
 import com.store.inventory.api.StockAlertListener;
+import com.store.inventory.application.InventoryServiceImpl;
+import com.store.inventory.domain.CategoryRules;
+import com.store.inventory.domain.LowStockNotifier;
+import com.store.inventory.infrastructure.InMemoryInventoryRepository;
 import java.time.Clock;
 
 /**
@@ -14,6 +18,9 @@ public final class Inventory {
     }
 
     public static InventoryService create(Clock clock, StockAlertListener alertListener) {
-        throw new UnsupportedOperationException("TODO");
+        var repository = new InMemoryInventoryRepository();
+        var categoryRules = new CategoryRules();
+        var lowStockNotifier = new LowStockNotifier(alertListener, 5);
+        return new InventoryServiceImpl(clock, repository, categoryRules, lowStockNotifier);
     }
 }
